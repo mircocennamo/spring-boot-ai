@@ -3,10 +3,8 @@ package it.interno.ai.configuration;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.chat.memory.InMemoryChatMemory;
-import org.springframework.ai.embedding.EmbeddingModel;
 import org.springframework.ai.rag.generation.augmentation.ContextualQueryAugmenter;
 import org.springframework.ai.rag.retrieval.search.VectorStoreDocumentRetriever;
-import org.springframework.ai.vectorstore.SimpleVectorStore;
 import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
@@ -32,12 +30,13 @@ public class FunctionCallingChatConfiguration {
     RetrievalAugmentationAdvisor retrievalAugmentationAdvisor(VectorStore vectorStore) {
         VectorStoreDocumentRetriever documentRetriever = VectorStoreDocumentRetriever.builder()
                 .vectorStore(vectorStore)
-                .similarityThreshold(0.50)
-                .topK(5)
+                .similarityThreshold(0.80) // Aumenta la soglia di similarità per risultati più precisi
+                .topK(3) // Riduci il numero di documenti recuperati
                 .build();
 
         ContextualQueryAugmenter queryAugmenter = ContextualQueryAugmenter.builder()
-                .allowEmptyContext(true)
+                .allowEmptyContext(false) // Non permettere contesti vuoti per query più rilevanti
+               // .maxContextLength(300) // Limita la lunghezza del contesto per migliorare le prestazioni
                 .build();
 
         return RetrievalAugmentationAdvisor.builder()

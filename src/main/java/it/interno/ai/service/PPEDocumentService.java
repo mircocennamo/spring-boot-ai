@@ -26,7 +26,5 @@ public class PPEDocumentService {
 
 
 
-    public List<PPEDistro> findSimilarDocuments(String searchText) {
-        return pPEDocumentsRepository.findSimilarDocuments(searchText);
-    }
+
 }

@@ -1,40 +1,17 @@
 package it.interno.ai.controller;
 
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import it.interno.ai.model.PPEDistro;
-import it.interno.ai.model.PersonaPoliticamenteEsposta;
-import it.interno.ai.repository.PPEDocumentsRepository;
-import it.interno.ai.service.PPEDocumentService;
 import it.interno.ai.tools.PersonaPoliticamenteEspostaGeneratorTools;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.PromptChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.client.advisor.RetrievalAugmentationAdvisor;
 import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.SystemMessage;
-import org.springframework.ai.chat.messages.UserMessage;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.PromptTemplate;
-import org.springframework.ai.vectorstore.VectorStore;
 import org.springframework.core.io.ResourceLoader;
-import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
-
-import java.io.IOException;
-import java.text.ParseException;
-import java.util.List;
-import java.util.concurrent.CompletableFuture;
-import java.util.concurrent.ExecutorService;
 
 /**
  * @author mirco.cennamo on 27/02/2025
@@ -44,13 +21,10 @@ import java.util.concurrent.ExecutorService;
 public class PPEController {
 
     private final ChatClient chatClient;
-    private final ResourceLoader resourceLoader;
-    //private final PersonaPoliticamenteEspostaGeneratorTools tools;
+
     private static final Logger log = LoggerFactory.getLogger(PPEController.class);
-    //private final PPEDocumentService pPEDocumentService;
-    private final QuestionAnswerAdvisor questionAnswerAdvisor;
-    //private final ExecutorService executorService;
-    private final VectorStore vectorStore;
+
+
     private final String PROMPT_BLUEPRINT = """
       Le richieste sono relative alle persone politicamente esposte.
       L'advisor RetrievalAugmentationAdvisor fornito contiene la lista delle persone politicamente esposte da esaminare.
@@ -64,42 +38,41 @@ public class PPEController {
     """;
     private final RetrievalAugmentationAdvisor retrievalAugmentationAdvisor;
 
-
     public PPEController(//PersonaPoliticamenteEspostaGeneratorTools tools,
-                         ChatClient.Builder builder, ChatMemory chatMemory, ResourceLoader resourceLoader,
-                         //PPEDocumentService pPEDocumentService,
-                          QuestionAnswerAdvisor questionAnswerAdvisor,
-                         //ExecutorService executorService,
-                          VectorStore vectorStore,
-                         RetrievalAugmentationAdvisor retrievalAugmentationAdvisor
+                         ChatClient.Builder builder,
+                         ChatMemory chatMemory,
+                         ResourceLoader resourceLoader,
+                         RetrievalAugmentationAdvisor retrievalAugmentationAdvisor,
+                         PersonaPoliticamenteEspostaGeneratorTools tools
                           ) {
-       //this.tools=tools;
-        this.resourceLoader = resourceLoader;
-       // this.pPEDocumentService = pPEDocumentService;
-        this.questionAnswerAdvisor = questionAnswerAdvisor;
-        //this.executorService = executorService;
-        this.vectorStore = vectorStore;
+
         this.retrievalAugmentationAdvisor = retrievalAugmentationAdvisor;
 
         this.chatClient = builder
                 .defaultAdvisors(
                         new PromptChatMemoryAdvisor(chatMemory),
                         new SimpleLoggerAdvisor())
-              //.defaultSystem(resourceLoader.getResource("classpath:/prompts/ppe.st"))
+             // .defaultSystem(resourceLoader.getResource("classpath:/prompts/ppe.st"))
                 //.defaultAdvisors(new QuestionAnswerAdvisor(vectorStore))
-               //.defaultTools(tools)
+               .defaultTools(tools)
                .build();
     }
 
     @GetMapping("/info")
-    public String myFamilyFaq(@RequestParam String message) {
-        log.info("message: {}", message);
-        return this.chatClient.prompt()
-                .user(message)
-                .advisors(retrievalAugmentationAdvisor)
-                //.advisors(new QuestionAnswerAdvisor(vectorStore))
-                .call()
-                .content();
+    public String infoPPE(@RequestParam String message) {
+        long startTime = System.currentTimeMillis();
+
+
+            String response = this.chatClient.prompt()
+                    .user(message)
+                    .advisors(retrievalAugmentationAdvisor)
+                    .call()
+                    .content();
+            long endTime = System.currentTimeMillis();
+            long responseTime = endTime - startTime;
+            log.info("Response time: {} ms", responseTime);
+            return response;
+
     }
 
 /*
@@ -130,7 +103,7 @@ public class PPEController {
                 .content();
     }
 
- */
+
 
     private String createPrompt(String query) {
         PromptTemplate promptTemplate = new PromptTemplate(PROMPT_BLUEPRINT);
@@ -140,6 +113,6 @@ public class PPEController {
         promptTemplate.add("query", query);
         return promptTemplate.render();
     }
-
+*/
 
 }

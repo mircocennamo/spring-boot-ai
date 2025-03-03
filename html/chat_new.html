@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Chat New Page</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+        }
+        .chat-container {
+            width: 50%;
+            margin: 0 auto;
+            padding: 20px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .chat-box {
+            width: 100%;
+            height: 300px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            overflow-y: scroll;
+            padding: 10px;
+            margin-bottom: 10px;
+            resize: both;
+        }
+        .chat-input {
+            width: calc(100% - 22px);
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+        .chat-button {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: #007BFF;
+            color: white;
+            cursor: pointer;
+        }
+        .example-requests {
+            margin-top: 20px;
+            padding: 10px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+            background-color: #f9f9f9;
+        }
+    </style>
+</head>
+<body>
+<div class="chat-container">
+    <div class="chat-box" id="chatBox"></div>
+    <input type="text" id="chatInput" class="chat-input" placeholder="Type your message here...">
+    <button class="chat-button" onclick="sendMessage()">Send</button>
+</div>
+
+<div class="example-requests">
+    <h3>Domande di esempio:</h3>
+    <ul>
+        <li>mi puoi fornire informazioni su BAZOLI ALFREDO.</li>
+        <li>mi puoi fornire la data di nascita di BAZOLI ALFREDO.</li>
+        <li>mi fornisci il numero di utenti che hanno come ente di appartenenza SENATO DELLA REPUBBLICA</li>
+    </ul>
+</div>
+
+<script>
+    async function sendMessage() {
+        const message = document.getElementById('chatInput').value;
+        if (!message) return;
+
+        const chatBox = document.getElementById('chatBox');
+        chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
+
+        try {
+            const response = await fetch('http://localhost:8080/chat_new?message=' + encodeURIComponent(message), {
+                method: 'GET',
+                headers: {
+                    'Accept': '*/*'
+                }
+            });
+            if (!response.ok) {
+                throw new Error('Network response was not ok');
+            }
+            const data = await response.text();
+            chatBox.innerHTML += `<div><strong>Bot:</strong> ${data}</div>`;
+        } catch (error) {
+            chatBox.innerHTML += `<div><strong>Error:</strong> ${error.message}</div>`;
+        }
+
+        document.getElementById('chatInput').value = '';
+        chatBox.scrollTop = chatBox.scrollHeight;
+    }
+</script>
+</body>
+</html>

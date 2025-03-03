@@ -58,17 +58,9 @@
 <div class="example-requests">
     <h3>Domande di esempio:</h3>
     <ul>
-        <li>Mostrami gli uffici delle persone politicamente esposte.</li>
-        <li>Dammi le informazioni riguardo le persone politicamente esposte.</li>
-        <li>Lista tutta le persone politicamente esposte e i loro uffici.</li>
-        <li>Chi sono le persone politicamente esposte nel settore pubblico?</li>
-        <li>Elenca le persone politicamente esposte con incarichi dirigenziali.</li>
-        <li>Quali sono le date di richiesta delle persone politicamente esposte?</li>
-        <li>Mostrami le persone politicamente esposte con data richiesta tra il 01/01/1950 e il 31/12/1960.</li>
-        <li>Elenca le persone politicamente esposte con data richiesta tra il 01/01/1970 e il 31/12/1980.</li>
-        <li>Dammi le informazioni sulle persone politicamente esposte con data richiesta tra il 01/01/1990 e il 31/12/2000.</li>
-        <li>Chi sono le persone politicamente esposte con data richiesta tra il 01/01/2000 e il 31/12/2010?</li>
-        <li>Mostra le persone politicamente esposte con data richiesta tra il 01/01/2010 e il 31/12/2020.</li>
+        <li>mi puoi fornire informazioni su BAZOLI ALFREDO.</li>
+        <li>mi puoi fornire la data di nascita di BAZOLI ALFREDO.</li>
+        <li>mi fornisci il numero di utenti che hanno come ente di appartenenza SENATO DELLA REPUBBLICA</li>
     </ul>
 </div>
 
@@ -81,7 +73,7 @@
         chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
 
         try {
-            const response = await fetch('http://localhost:8080/info?message=' + encodeURIComponent(message), {
+            const response = await fetch('http://localhost:8080/chat?message=' + encodeURIComponent(message), {
                 method: 'GET',
                 headers: {
                     'Accept': '*/*'
