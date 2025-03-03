@@ -10,7 +10,7 @@ import java.time.format.DateTimeParseException;
 
 public class DateUtil {
 
-    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ISO_LOCAL_DATE;
+    private static final DateTimeFormatter DATE_FORMATTER = DateTimeFormatter.ofPattern("dd/MM/yyyy");
 
     public static LocalDate parseDate(String dateStr) {
         try {

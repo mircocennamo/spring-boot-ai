@@ -81,7 +81,7 @@
         chatBox.innerHTML += `<div><strong>You:</strong> ${message}</div>`;
 
         try {
-            const response = await fetch('http://localhost:8080/infonew?message=' + encodeURIComponent(message), {
+            const response = await fetch('http://localhost:8080/info?message=' + encodeURIComponent(message), {
                 method: 'GET',
                 headers: {
                     'Accept': '*/*'

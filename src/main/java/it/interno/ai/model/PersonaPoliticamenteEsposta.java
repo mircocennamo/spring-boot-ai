@@ -9,21 +9,52 @@ import java.time.LocalDate;
 public class PersonaPoliticamenteEsposta {
     private String nome;
     private String cognome;
-    private String idUtente;
-    private String idUfficio;
-    private LocalDate dataRichiesta;
-    private String denominazioneUfficio;
+    private LocalDate dataDiNascita;
+    private String luogoDiNascita;
+    private String provinciaDiNascita;
+    private LocalDate dataDiFineControllo;
+    private String ente;
+    private String ruolo;
 
-    public PersonaPoliticamenteEsposta() {
+
+    public String getEnte() {
+        return ente;
     }
 
-    public PersonaPoliticamenteEsposta(String nome, String cognome, String idUtente, String idUfficio, LocalDate dataRichiesta, String denominazioneUfficio) {
-        this.nome = nome;
-        this.cognome = cognome;
-        this.idUtente = idUtente;
-        this.idUfficio = idUfficio;
-        this.dataRichiesta = dataRichiesta;
-        this.denominazioneUfficio = denominazioneUfficio;
+    public void setEnte(String ente) {
+        this.ente = ente;
+    }
+
+    public String getRuolo() {
+        return ruolo;
+    }
+
+    public void setRuolo(String ruolo) {
+        this.ruolo = ruolo;
+    }
+
+    public LocalDate getDataDiFineControllo() {
+        return dataDiFineControllo;
+    }
+
+    public void setDataDiFineControllo(LocalDate dataDiFineControllo) {
+        this.dataDiFineControllo = dataDiFineControllo;
+    }
+
+    public String getProvinciaDiNascita() {
+        return provinciaDiNascita;
+    }
+
+    public void setProvinciaDiNascita(String provinciaDiNascita) {
+        this.provinciaDiNascita = provinciaDiNascita;
+    }
+
+    public String getLuogoDiNascita() {
+        return luogoDiNascita;
+    }
+
+    public void setLuogoDiNascita(String luogoDiNascita) {
+        this.luogoDiNascita = luogoDiNascita;
     }
 
     public String getCognome() {
@@ -34,38 +65,6 @@ public class PersonaPoliticamenteEsposta {
         this.cognome = cognome;
     }
 
-    public LocalDate getDataRichiesta() {
-        return dataRichiesta;
-    }
-
-    public void setDataRichiesta(LocalDate dataRichiesta) {
-        this.dataRichiesta = dataRichiesta;
-    }
-
-    public String getDenominazioneUfficio() {
-        return denominazioneUfficio;
-    }
-
-    public void setDenominazioneUfficio(String denominazioneUfficio) {
-        this.denominazioneUfficio = denominazioneUfficio;
-    }
-
-    public String getIdUfficio() {
-        return idUfficio;
-    }
-
-    public void setIdUfficio(String idUfficio) {
-        this.idUfficio = idUfficio;
-    }
-
-    public String getIdUtente() {
-        return idUtente;
-    }
-
-    public void setIdUtente(String idUtente) {
-        this.idUtente = idUtente;
-    }
-
     public String getNome() {
         return nome;
     }
@@ -74,15 +73,34 @@ public class PersonaPoliticamenteEsposta {
         this.nome = nome;
     }
 
+    public LocalDate getDataDiNascita() {
+        return dataDiNascita;
+    }
+
+    public void setDataDiNascita(LocalDate dataDiNascita) {
+        this.dataDiNascita = dataDiNascita;
+    }
+
+    public boolean matchesCriteria(String criteria) {
+        return criteria.contains(this.nome) ||
+                criteria.contains(this.cognome) ||
+                criteria.contains(this.luogoDiNascita) ||
+                criteria.contains(this.provinciaDiNascita) ||
+                criteria.contains(this.ente) ||
+                criteria.contains(this.ruolo);
+    }
+
     @Override
     public String toString() {
         return "PersonaPoliticamenteEsposta{" +
                 "cognome='" + cognome + '\'' +
                 ", nome='" + nome + '\'' +
-                ", idUtente='" + idUtente + '\'' +
-                ", idUfficio='" + idUfficio + '\'' +
-                ", dataRichiesta=" + dataRichiesta +
-                ", denominazioneUfficio='" + denominazioneUfficio + '\'' +
+                ", dataDiNascita=" + dataDiNascita +
+                ", luogoDiNascita='" + luogoDiNascita + '\'' +
+                ", provinciaDiNascita='" + provinciaDiNascita + '\'' +
+                ", dataDiFineControllo=" + dataDiFineControllo +
+                ", ente='" + ente + '\'' +
+                ", ruolo='" + ruolo + '\'' +
                 '}';
     }
 }

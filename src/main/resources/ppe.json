@@ -1,0 +1,21 @@
+[{
+  "COGNOME":"Baudo",
+  "NOME":"Pippo",
+  "DATA NASCITA (gg/mm/aaaa)":"12/04/1980",
+  "LUOGO NASCITA":"Roma",
+  "PROVINCIA NASCITA":"RM",
+  "DATA FINE CONTROLLO (gg/mm/aaaa)":"31/12/2030",
+  "ENTE DI APPARTENENZA":"TV",
+  "RUOLO":"presentatore"
+},
+  {
+    "COGNOME":"Rossi",
+    "NOME":"Mario",
+    "DATA NASCITA (gg/mm/aaaa)":"12/04/1980",
+    "LUOGO NASCITA":"Salerno",
+    "PROVINCIA NASCITA":"SA",
+    "DATA FINE CONTROLLO (gg/mm/aaaa)":"31/12/2030",
+    "ENTE DI APPARTENENZA":"RADIO",
+    "RUOLO":"tecnico"
+  }
+]

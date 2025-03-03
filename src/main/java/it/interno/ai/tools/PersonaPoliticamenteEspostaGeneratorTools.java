@@ -1,31 +1,47 @@
 package it.interno.ai.tools;
 
 
-
 import it.interno.ai.model.PersonaPoliticamenteEsposta;
 import it.interno.ai.utils.DateUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.ai.tool.annotation.Tool;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.core.io.Resource;
+import org.springframework.core.io.ResourceLoader;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
+import org.springframework.stereotype.Component;
 
+import java.io.BufferedReader;
+import java.io.FileReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
 import java.text.ParseException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
+import java.util.stream.Collectors;
 
 /**
  * @author mirco.cennamo on 28/02/2025
  * @project spring-into-ai
  */
-
+@Component
+@EnableAsync
 public class PersonaPoliticamenteEspostaGeneratorTools {
 
 
   private static final Logger log = LoggerFactory.getLogger(PersonaPoliticamenteEspostaGeneratorTools.class);
+  private final ResourceLoader resourceLoader;
 
 
-  public PersonaPoliticamenteEspostaGeneratorTools() {
+  @Autowired
+  public PersonaPoliticamenteEspostaGeneratorTools(ResourceLoader resourceLoader) {
+    this.resourceLoader = resourceLoader;
   }
-
+/*
   @Tool(description = "Restituisce le informazioni di tutte le persone politicamente esposte")
     public  List<PersonaPoliticamenteEsposta> getPPE() throws ParseException {
       log.info("start getPPE: {}");
@@ -79,10 +95,49 @@ public class PersonaPoliticamenteEspostaGeneratorTools {
 
         return persone;
     }
+  @Tool(description = "Restituisce le informazioni di tutte le persone politicamente esposte")
+  public List<PersonaPoliticamenteEsposta> getAll() throws IOException, ParseException {
+    log.info("start getAll: {}");
+    List<PersonaPoliticamenteEsposta> persone = new ArrayList<>();
+    Resource resource = resourceLoader.getResource("classpath:20250207-ListaCompleta.csv");
+    try (BufferedReader br = new BufferedReader(new InputStreamReader(resource.getInputStream()))) {
+      String line = br.readLine(); // Skip header
+      while ((line = br.readLine()) != null) {
+        String[] values = line.split(";");
+        if (values.length < 8) continue; // Skip invalid lines
+        PersonaPoliticamenteEsposta persona = new PersonaPoliticamenteEsposta();
+        persona.setCognome(values[0]);
+        persona.setNome(values[1]);
+        persona.setDataDiNascita(DateUtil.parseDate(values[2]));
+        persona.setLuogoDiNascita(values[3]);
+        persona.setProvinciaDiNascita(values[4]);
+        persona.setDataDiFineControllo(DateUtil.parseDate(values[5])); //dataFineControllo
+        persona.setEnte(values[6]);
+        persona.setRuolo(values[7]);
+        persone.add(persona);
+      }
+    }
+    log.info("stop getAll");
+    return persone;
+  }
+
+  @Async
+  public CompletableFuture<List<PersonaPoliticamenteEsposta>> getAllAsync() throws IOException, ParseException {
+    List<PersonaPoliticamenteEsposta> result = getAll();
+    return CompletableFuture.completedFuture(result);
+  }
+
+ */
+
+  public List<PersonaPoliticamenteEsposta> filterByCriteria(List<PersonaPoliticamenteEsposta> ppeList, String criteria) {
+    return ppeList.stream()
+            .filter(ppe -> ppe.matchesCriteria(criteria))
+            .collect(Collectors.toList());
+  }
 
 
-  @Tool(description = "Restituisce le informazioni di una persona politicamente esposta utilizzando il cognome")
-  PersonaPoliticamenteEsposta getPersonaPoliticamenteEspostaInfo(String cognome) throws ParseException {
+ /* @Tool(description = "Restituisce le informazioni di una persona politicamente esposta utilizzando il cognome")
+  PersonaPoliticamenteEsposta getPersonaPoliticamenteEspostaInfo(@ToolParam(description = "cognome della persona politicamente esposta") String cognome) throws ParseException {
     log.info("start getPersonaPoliticamenteEspostaInfo: {}",cognome);
     switch(cognome){
         case "Atzori":
@@ -99,7 +154,7 @@ public class PersonaPoliticamenteEspostaGeneratorTools {
             return new PersonaPoliticamenteEsposta();
     }
   }
-
+*/
 
 
 }
